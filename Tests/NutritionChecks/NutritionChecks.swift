@@ -40,6 +40,7 @@ private func fixture() -> Meal {
 struct NutritionChecks {
     static func main() throws {
         let checks: [(String, () throws -> Void)] = [
+            ("Demo gross/tare/net and confirmed nutrition handoff", scaleDemo),
             ("Per-100g scaling and mixed-meal totals", calculation),
             ("Invalid weights, nutrients, names and empty meals", validation),
             ("Overflow and duplicate ingredient rejection", overflow),
@@ -52,6 +53,29 @@ struct NutritionChecks {
             print("PASS: \(name)")
         }
         print("All \(checks.count) nutrition checks passed.")
+    }
+
+    static func scaleDemo() throws {
+        let scale = MockScaleAdapter()
+        let empty = try scale.snapshot(for: .emptyPlate)
+        let food = try scale.snapshot(for: .plateAndFood)
+        try expect(empty.gross == 100 && empty.tare == 100 && empty.net == 0, "Empty plate arithmetic")
+        try expect(food.gross == 140 && food.tare == 100 && food.net == 40, "Food arithmetic")
+        for value in [-1, Double.nan, Double.infinity] {
+            try expectThrows(try ScaleReading(gross: value, tare: 0))
+            try expectThrows(try ScaleReading(gross: 100, tare: value))
+        }
+        try expectThrows(try ScaleReading(gross: 90, tare: 100))
+        try expectThrows(try UnavailableTrackpadAdapter().snapshot(for: .plateAndFood))
+        let match = try MockFoodIdentificationAdapter().previewCandidate()
+        try expectThrows(try match.ingredient(reading: food, confirmed: false))
+        try expectThrows(try match.ingredient(reading: empty, confirmed: true))
+        let ingredient = try match.ingredient(reading: food, confirmed: true)
+        let nutrition = try ingredient.totals()
+        try expectClose(nutrition.energy, 20)
+        try expectClose(nutrition.protein, 0.8)
+        try expectClose(nutrition.carbohydrate, 3.2)
+        try expectClose(nutrition.fat, 0.4)
     }
 
     static func calculation() throws {

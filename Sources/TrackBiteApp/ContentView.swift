@@ -10,25 +10,29 @@ struct ContentView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("TrackBite").font(.largeTitle.bold())
-                    Text("Build a meal from the weights and nutrition values you enter.")
+                    Text("TrackBite.").font(.system(size: 28, weight: .bold))
+                    Text("From a measured portion to a considered meal.")
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
-                Label("Manual weight", systemImage: "scalemass").font(.callout)
+                Label("MANUAL ENTRY", systemImage: "pencil.line").font(.callout)
             }
-            Text("Enter weights in grams. Trackpad capture and camera recognition are not connected.")
+            Text("Enter a portion weight and its nutrition source. Live trackpad and camera capture are not connected.")
                 .font(.caption).foregroundStyle(.secondary)
             if let error = model.errorMessage { Text(error).foregroundStyle(.red) }
-            if let message = model.confirmation { Text(message).foregroundStyle(.green) }
+            if let message = model.confirmation { Text(message).foregroundStyle(TrackBiteTheme.copper) }
             TabView {
-                draft.tabItem { Label("New meal", systemImage: "plus.circle") }
-                log.tabItem { Label("Meal log", systemImage: "list.bullet.rectangle") }
+                draft.tabItem { Label("02 / Ingredients", systemImage: "fork.knife") }
+                log.tabItem { Label("03 / Meal log", systemImage: "book.closed") }
             }
             Text("Estimates from your entries · Stored on this Mac · No photos or network requests")
                 .font(.caption).foregroundStyle(.secondary)
         }
-        .padding(20)
+        .padding(28)
+        .background(TrackBiteTheme.ivory)
+        .foregroundStyle(TrackBiteTheme.navy)
+        .tint(TrackBiteTheme.copper)
+        .preferredColorScheme(.light)
         .sheet(item: $editor) { draft in
             IngredientEditor(draft: draft, save: model.setIngredient)
         }
@@ -52,7 +56,7 @@ struct ContentView: View {
             if model.ingredients.isEmpty {
                 VStack(spacing: 8) {
                     Image(systemName: "fork.knife.circle").font(.system(size: 38))
-                    Text("Start with one ingredient").font(.title2)
+                    Text("A weight becomes an ingredient.").font(.system(size: 28, design: .serif))
                     Text("Use a package label or your own reference for values per 100 g.")
                         .foregroundStyle(.secondary)
                 }
@@ -81,10 +85,11 @@ struct ContentView: View {
                 }
                 Spacer()
                 Button("Save meal", action: model.saveMeal)
+                    .buttonStyle(.borderedProminent)
                     .disabled(!model.canSave || model.ingredients.isEmpty || model.mealName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
             Text("The unsaved draft is cleared when the app closes.").font(.caption).foregroundStyle(.secondary)
-        }.padding(14)
+        }.padding(22).background(TrackBiteTheme.paper).clipShape(RoundedRectangle(cornerRadius: 16))
     }
 
     private var log: some View {
@@ -92,8 +97,8 @@ struct ContentView: View {
             if model.meals.isEmpty {
                 VStack(spacing: 8) {
                     Image(systemName: "book.closed").font(.system(size: 36))
-                    Text("No saved meals yet").font(.title2)
-                    Text("Save a meal to keep its ingredients and estimates here.").foregroundStyle(.secondary)
+                    Text("Your portion, remembered.").font(.system(size: 28, design: .serif))
+                    Text("A fresh page. Save a meal to keep its ingredients and estimates here.").foregroundStyle(.secondary)
                 }.frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 List(model.meals.sorted { $0.savedAt > $1.savedAt }) { meal in
@@ -120,7 +125,7 @@ struct ContentView: View {
                     }.padding(.vertical, 5)
                 }
             }
-        }.padding(14)
+        }.padding(22).background(TrackBiteTheme.paper).clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }
 
@@ -173,7 +178,8 @@ private struct IngredientEditor: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Ingredient details").font(.title2.bold())
+            Text("Identify. Review. Confirm.").font(.system(size: 30, design: .serif))
+            Text("MANUAL INGREDIENT / SOURCE VALUES").font(.caption).tracking(1.5).foregroundStyle(TrackBiteTheme.copper)
             Form {
                 TextField("Name", text: $draft.name)
                 TextField("Weight in grams", text: $draft.grams)
@@ -195,6 +201,8 @@ private struct IngredientEditor: View {
                     catch { self.error = error.localizedDescription }
                 }.keyboardShortcut(.defaultAction)
             }
-        }.padding(24).frame(width: 500)
+        }.padding(28).frame(width: 520)
+            .background(TrackBiteTheme.ivory).foregroundStyle(TrackBiteTheme.navy)
+            .tint(TrackBiteTheme.copper).preferredColorScheme(.light)
     }
 }

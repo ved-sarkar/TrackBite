@@ -7,3 +7,7 @@ The source reference under [`third_party/trackweight/`](third_party/trackweight/
 All 13 upstream Swift files, including the upstream package manifest, are unchanged. Preparation removed signing-team/identity configuration and omitted local workspace state, export settings, automation, and build outputs. The new root application uses a separate Foundation/SwiftUI implementation and does not import the upstream framework or modify its weighing algorithms.
 
 No open-source license is granted for original TrackBite material by this snapshot. Copied third-party source retains its own MIT terms; those notices do not relicense the original TrackBite application or documents. No external food database or nutrition dataset is included. Test inputs are fictional numbers for checking arithmetic, not food-composition claims.
+
+## Scale-first prototype — 2026-10-08
+
+This update adds an offline HTML demo, a native SwiftUI scale view, mock scale/food adapters and focused checks. These additions model the intended trackpad → camera-assisted food match → nutrition log concept with simulated readings; they do not implement or validate live hardware/camera recognition. The prior manual log remains available separately. No copied TrackWeight or OpenMultitouchSupport file was edited. The navy, ivory and copper interface and concept workflow diagram are original additions. The diagram is an illustration, not a captured application screen. User-supplied photographs are excluded until their actual pixels and metadata can be reviewed.

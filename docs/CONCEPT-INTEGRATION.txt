@@ -1,0 +1,40 @@
+TRACKBITE — LIVE INTEGRATION ASSESSMENT
+Reviewed 2026-10-08.
+
+CURRENT DELIVERY
+The HTML demo and native SwiftUI scale show a simulated 100 g empty plate with 100 g tare; the food state shows 140 g gross - 100 g tare = 40 g food. The labels deliberately distinguish total from net. Mock food matching is explicit; its fictional nutrition values are scaled by net grams / 100. Demo logging is session-only. The prior manual meal log remains separate and uses its original implementation. No real images were opened or uploaded.
+
+SOURCE AND PROVENANCE
+The prototype extends the existing native manual-entry app. The original nutrition and storage core remains unchanged, while the interface now begins with the scale concept. All vendored source and licenses remain unchanged. ATTRIBUTION.md identifies the recorded TrackWeight revision.
+
+HARDWARE UNCERTAINTY
+The upstream README describes a Force Touch MacBook, macOS 13+, capacitive contact, and unsandboxed private multitouch access. Its grams/accuracy statements are upstream claims, not calibration evidence for this Mac. Neither the inspected source nor README establishes a manufacturer-approved load rating, safe maximum mass, accuracy tolerance, linearity, repeatability, or device-specific calibration. The 100 g and 140 g values are fixtures, not safe-loading guidance. Do not interpret this demo as a calibrated scale or use it to justify physical loading. Conductive-contact dependence, contact pressure, surface/contact geometry, multiple touches, drift, and OS/device variation remain unresolved. No hardware experiment was run.
+
+Upstream reference: https://github.com/KrishKrosh/TrackWeight
+Pinned local reference: third_party/trackweight/UPSTREAM_README.md
+
+REVIEWED IMPLEMENTATION RISKS
+1. ScaleViewModel.swift uses the first touch's pressure, subtracts zeroOffset, clamps negatives to zero, and clears tare when touch data empties. A future TrackBite adapter should report contact loss, invalidate the measurement, and explicitly require a new tare rather than show a stale or apparently valid zero.
+2. WeighingViewModel.swift uses a ten-sample mean and a roughly three-second stability condition. It assigns baselinePressure but completeWeighing() returns currentPressure without subtracting that baseline. finalWeight is initialized/reset but never assigned a positive result; the contact-loss branch tests it. This path must not be adopted as a validated net-weight algorithm.
+3. OMSManager is a shared listener/stream wrapper around OpenMultitouchSupportXCF. Current root Package.swift does not depend on it. The vendored package points to a remote 3.0.3 binary framework and checksum; that binary has not been downloaded, loaded, audited, or approved in this task. Listener startup failure, clean cancellation, singleton contention, multiple devices, stale samples and thread lifetime need tests before any integration.
+4. A browser page alone has no access to this native private framework. The portable UI is an offline demo, not a browser hardware adapter.
+
+IMPLEMENTED SEAMS
+NutritionCore/ScaleDemo.swift defines ScaleReading, ScaleAdapter, MockScaleAdapter and a deliberately unavailable live adapter. Non-finite/negative values and negative net readings are rejected. MockFoodIdentificationAdapter yields a labeled fictional candidate. FoodCandidate.ingredient requires explicit confirmation and validates positive net mass before using the existing nutrition core. A real identification adapter will need image input, provenance, confidence and error types; the current preview protocol is intentionally mock-only, not a complete image pipeline.
+
+LIVE DECISIONS / PERMISSIONS STILL REQUIRED
+- Hardware: establish the exact supported Mac/trackpad model and an acceptable validation protocol. Independently establish manufacturer load constraints; this review did not find a safe limit. Never infer one from sensor readings.
+- Private APIs: explicitly decide whether to pursue an experimental unsandboxed native build. Review the pinned upstream source/binary and its global touch-event scope first. The upstream requires disabling App Sandbox; no app entitlements or system security settings were changed here. Compatibility and any actual macOS Input Monitoring/Accessibility prompts must be tested on an approved build. Do not preemptively request Full Disk Access, root, Input Monitoring or Accessibility: their necessity is not established from the wrapper alone. Never bypass Gatekeeper/SIP or other security restrictions.
+- Camera: select camera capture versus user-selected local photo import. For capture, package a stable app identity, NSCameraUsageDescription, applicable com.apple.security.device.camera entitlement for sandbox/hardened-runtime builds, and request video authorization only after the user clicks Enable camera. Handle denied/restricted states and stop capture when leaving the flow. Audio is unnecessary; do not request microphone access. These are implementation requirements to recheck against the selected signing/runtime configuration, not permissions requested in this build.
+- Recognition provider: choose an on-device, reviewed/licensed model or an explicitly approved remote provider. No model/provider has been selected or installed. Local inference needs an approved model artifact and performance/quality evaluation. Remote inference additionally needs a named destination, consent for each intended photo disclosure, retention policy, cost cap and user-managed credentials. No paid API or credential was created.
+- Nutrition source: choose and license a food-composition database/provider or continue with user-entered labels. Record food ID, source/version, per-100 g basis, cooked/raw state and preparation. Image recognition alone cannot establish nutrient values or resolve mixed-meal ingredient fractions. Require user correction/confirmation before scaling and saving.
+- Storage: decide whether photos are retained at all, how they are removed and how source/measurement provenance is stored. The current demo never persists photos or demo entries. Real entries should distinguish measured, entered and estimated weights and preserve uncertainty.
+
+PROPOSED LIVE FLOW (NOT IMPLEMENTED)
+User opts into selected source → validate connected device/contact → establish baseline and plate tare → accept stable, fresh gross reading → compute net with uncertainty → user starts capture/import → show candidate matches → user confirms food and preparation → obtain attributed per-100 g values → calculate nutrition from net grams → user confirms local log entry. Failed contact, stale data, unknown food or permissions denial must interrupt saving rather than fabricate a result.
+
+APPLE PERMISSION REFERENCES
+https://developer.apple.com/documentation/bundleresources/information-property-list/nscamerausagedescription
+https://developer.apple.com/documentation/avfoundation/requesting-authorization-to-capture-and-save-media
+https://developer.apple.com/documentation/BundleResources/Entitlements/com.apple.security.device.camera
+Apple page titles were reachable, but text retrieval required JavaScript and the linked Markdown renderer was unsupported; permission details require confirmation during live implementation. The demo needs none of these permissions.

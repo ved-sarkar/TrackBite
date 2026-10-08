@@ -3,13 +3,19 @@ import NutritionCore
 
 @main
 struct TrackBiteApp: App {
-    @StateObject private var model = MealViewModel()
-
     var body: some Scene {
         WindowGroup {
-            ContentView(model: model).frame(minWidth: 760, minHeight: 560)
+            ScaleDemoView()
+        }
+        Window("Manual meal log", id: "manual-log") {
+            ManualLogWindow()
         }
     }
+}
+
+private struct ManualLogWindow: View {
+    @StateObject private var model = MealViewModel()
+    var body: some View { ContentView(model: model).frame(minWidth: 760, minHeight: 560) }
 }
 
 @MainActor

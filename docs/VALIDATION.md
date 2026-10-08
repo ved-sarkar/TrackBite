@@ -1,22 +1,26 @@
-# Implementation and validation
+# Prototype validation
 
-## Calculation contract
+## Passed
 
-Each ingredient stores a name, a positive weight in grams, and entered per-100-g values for energy (kcal), protein, carbohydrate and fat (grams). Its contribution is `weight / 100 × value`. A meal sums ingredient contributions. Energy is the entered energy value scaled by weight; the app does not reconstruct energy from a 4/4/9 formula or infer missing nutrient values.
+- Native SwiftUI build on arm64 macOS with Apple Swift 6.3.2.
+- Seven native check groups covering gross/tare/net, rejected invalid readings, explicit candidate confirmation, nutrient scaling, persistence, malformed logs and failed writes.
+- Offline demo script checks covering both weighing states, ingredient review, required naming, confirmed logging, navigation, reset and keyboard shortcuts. Shortcuts do not consume typing inside the ingredient-name field.
+- Vendored TrackWeight source and MIT notices preserved byte-for-byte. The nutrition and storage implementations remain unchanged.
 
-Names cannot be blank; weights must be finite and positive; nutrients must be finite and nonnegative. Empty meals, duplicate stored identifiers, overflowed totals, and malformed saved data are rejected. These checks validate numeric structure, not the accuracy or biological plausibility of a nutrition label.
+The browser checks use a small DOM stub to exercise state and event behavior. They do not certify visual layout or accessibility in a real browser. The native package has no external dependencies; no private framework, camera, model or paid service was activated.
 
-## Persistence contract
+## Outstanding
 
-Saved meals retain their ingredient inputs and stable identifiers. Totals are calculated from those saved inputs when reviewed. A write is committed to memory only after the complete JSON file is saved atomically. A failed save leaves the draft available to retry. A malformed existing log is not silently replaced with an empty one. Storage is a local plaintext file without multi-process locking or cloud synchronization.
+- Automated browser rendering was blocked by the local-file URL security policy; no workaround was attempted. The redesigned interface has not been visually verified in this environment. Native screens compiled but were not launched for a capture. No screenshots are claimed or included.
+- The two user-supplied demonstration photos could not be materialized through the supported Library flow, including a bounded retry. Returned descriptions are not pixel inspection. Those photos are excluded until privacy, on-screen text, background details and EXIF can be reviewed and sanitized.
+- No physical weighing, safe load limit, device-specific calibration or food-recognition accuracy has been validated. The 100/140/40 g demonstration is simulated.
 
-## Focused verification
+## Reproduce
 
-Checked on 2026-10-08 using Apple Swift 6.3.2 on Apple Silicon:
+```sh
+swift build
+swift run NutritionChecks
+node scripts/check-demo.cjs
+```
 
-- `swift run NutritionChecks`: all six check groups passed, covering per-100-g scaling and mixed meals, invalid inputs, overflow/duplicate ingredients, save/reload/delete, malformed/duplicate logs, and failed writes.
-- `swift build --product TrackBite`: the SwiftUI application compiled and linked successfully.
-
-The checks use fictional arithmetic inputs and temporary files. They do not access personal meal logs, photos, hardware, provider APIs, or a food database. The app was compiled but not launched; UI interaction and physical weighing remain unverified. No accuracy claim follows from passing arithmetic checks.
-
-The root app is separate from the preserved third-party weighing project. Compiling the root package does not establish that the original Xcode weighing project builds, calibrates accurately, or works with any particular trackpad. Camera recognition and direct hardware integration are not part of this implementation.
+The offline demo can be opened directly in a browser for manual visual review. Both state buttons, all three navigation screens, confirmation, reset and full-screen controls should be checked. Keep the Demo badge visible in any future captures; staged photographs must be captioned as simulated concept demonstrations.

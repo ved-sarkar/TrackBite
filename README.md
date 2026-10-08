@@ -1,64 +1,68 @@
 # TrackBite
 
-A small macOS prototype for turning ingredient weights and nutrition-label values into a saved meal log. Enter ingredients manually, review estimated energy and macronutrient totals, then save the meal on your Mac.
+**Weigh a portion. Understand the food. Keep the context.**
 
-TrackBite began as a trackpad-and-camera nutrition idea. The manual workflow is now implemented. The attributed TrackWeight weighing foundation is included separately; direct trackpad capture and camera recognition are future integration work.
+TrackBite explores a MacBook Force Touch trackpad as the weighing foundation for a camera-assisted nutrition workflow. The intended experience starts at the scale: subtract the plate, identify the food, confirm its nutrition source, then log the portion.
 
-```mermaid
-flowchart TD
-    Weight[Enter ingredient weight in grams] --> Ingredient[Ingredient entry]
-    Label[Enter nutrition values per 100 g] --> Ingredient
-    Ingredient --> Calculate[Scale values and sum meal estimates]
-    Calculate --> Review[Review and edit ingredients]
-    Review --> Save[Save meal and entered values]
-    Save --> Log[Local meal log]
-    Foundation[Attributed TrackWeight source] -. Integration planned .-> Weight
-    Camera[Camera recognition] -. Planned .-> Ingredient
-```
+![TrackBite concept diagram showing 140 g gross minus 100 g tare equals 40 g food, followed by food identification and logging.](docs/images/workflow.svg)
 
-Solid arrows describe the implemented manual workflow. Dashed arrows are planned integrations.
+*Concept diagram, not an app screenshot. The current prototype uses simulated weights and a mock food match; live trackpad capture and camera recognition are future integrations.*
 
-## Run it
+## Try the portion studio
 
-Requires macOS 13 or later and a Swift 5.9-compatible developer toolchain.
+Download or clone the repository, then open **[demo/TrackBite-Demo.html](demo/TrackBite-Demo.html)** in Safari or Chrome. The file is a complete offline interface—no server, installation, account or API key needed. GitHub's file viewer shows its source; open the downloaded file in your browser to use it.
+
+The navy, ivory and copper studio connects three screens:
+
+| Screen | What you can do now |
+| --- | --- |
+| **01 / Weigh** | Switch between the empty plate and food states; view gross, tare and net together. |
+| **02 / Ingredient** | Review a labeled mock food match, edit its name, and confirm the portion. |
+| **03 / Meal log** | Inspect the confirmed demo entry and its calculation; reset for another demonstration. |
+
+- **Press 1:** empty plate **100 g total**, tare **100 g**, food **0 g**.
+- **Press 2:** plate + food **140 g gross**, tare **100 g**, food **40 g net**.
+- **Press F:** full screen. **Esc:** exit. The Demo badge stays visible throughout.
+
+The portion example uses fictional values of 50 kcal per 100 g, so 40 g produces 20 kcal. Demo entries stay in memory and clear when the scale state changes or the page closes. The interface makes no sensor, camera or network calls. No physical loading is needed to operate the demonstration.
+
+## Native Mac app
+
+With macOS 13+ and a Swift 5.9-compatible developer toolchain:
 
 ```sh
 swift run TrackBite
 ```
 
-The root app has no third-party package dependencies, accounts, API keys, or network calls. Running it does not build or download the separate TrackWeight foundation.
+The app opens to the scale demo. Select **Ingredients & meal log** to open the native manual workflow, styled in the same palette. Enter a meal name, add ingredients with their weights and nutrition values per 100 g, review the totals, and save locally. The ingredient editor supports corrections; meal deletion asks for confirmation.
 
-1. Give the meal a name and choose **Add ingredient**.
-2. Enter its weight in grams and the energy, protein, carbohydrate, and fat values **per 100 g** from your chosen reference. Numeric fields use a decimal point; zero is allowed for nutrients.
-3. Add more ingredients or edit existing entries. The app updates the estimated totals using `grams / 100 × per-100-g value` for each ingredient, then sums the results.
-4. Choose **Save meal**. Open **Meal log** to review saved ingredients, their entered values, and recalculated totals. Deletion asks for confirmation.
+Demo entries are separate from saved manual meals. The manual log retains its existing storage at `~/Library/Application Support/TrackBite/meals.json`, with atomic saves and validation that preserves malformed files instead of overwriting them. The JSON file is not encrypted; unsaved drafts clear on close. There is no cloud sync or coordination between separate app processes.
 
-Weights and label values are entered by you; the app does not identify foods or verify their composition. Use matching quantities and preparation states for your inputs. Display values are rounded to one decimal place, while calculations and saved inputs retain their underlying precision. These are estimates, not dietary recommendations or medical measurements.
+## Implemented today, envisioned next
 
-## Local storage
+| Implemented prototype | Envisioned integration |
+| --- | --- |
+| Two explicit simulated scale states and net-weight arithmetic | Fresh readings from a reviewed native Force Touch adapter |
+| Local mock candidate with confirmation | User-initiated camera capture or photo import, candidate matches and corrections |
+| Sample nutrition scaling; manual ingredient values | An attributed food-composition source with cooked/raw and preparation context |
+| Session demo log; persistent native manual log | A saved entry that retains measurement and food-source provenance |
 
-Saved meals live in `~/Library/Application Support/TrackBite/meals.json`. Saves replace the file atomically, and failed writes leave the previous log and current draft intact. If an existing log is malformed, the app preserves it and disables saving until it is repaired or restored and the app reopened. The JSON file is not encrypted.
+A photo plus total mass does not reveal a mixed dish's ingredient composition. The proposed workflow keeps food identification and nutrition-source confirmation in the user's hands.
 
-An unsaved draft lasts only for the current app session. There is no cloud sync or coordination between separate app processes. No food diaries, real meal records, photos, datasets, or credentials are bundled.
+## Hardware foundation
 
-## Architecture and checks
+The attributed [TrackWeight source](third_party/trackweight/README.md) is included as an integration reference, separately from the root app. It describes Force Touch hardware, capacitive-contact dependence and private multitouch access. This repository has not established a safe trackpad load limit, device-specific calibration or accuracy tolerance. The displayed demo numbers are fixtures, not validated hardware readings. See [integration notes](docs/CONCEPT-INTEGRATION.txt) for source findings and the remaining permission/provider decisions.
 
-- `Sources/NutritionCore/`: ingredient/meal models, calculations, validation, and JSON persistence.
-- `Sources/TrackBiteApp/`: SwiftUI ingredient editor, draft review, and saved meal log.
-- `Tests/NutritionChecks/`: dependency-free checks with fictional arithmetic inputs and temporary files.
-- `third_party/trackweight/`: attributed upstream weighing source, separate from the root app.
+## Build and checks
 
 ```sh
+swift build
 swift run NutritionChecks
-swift build --product TrackBite
+node scripts/check-demo.cjs
 ```
 
-See [validation and implementation notes](docs/VALIDATION.md). UI interaction and physical weighing are not verified by the calculation checks.
+The root Swift package has no external dependencies and does not build or download the vendored framework. Checks cover nutrition, persistence, invalid inputs, gross/tare/net, confirmation and demo navigation. See [validation](docs/VALIDATION.md) for the distinction between successful build/calculation checks and the outstanding visual/hardware review.
 
-## Weighing foundation and future work
+## Credits
 
-The included [TrackWeight source reference](third_party/trackweight/README.md) comes from Krish Shah's upstream project and its OpenMultitouchSupport integration by Takuto Nakamura. Its 13 Swift files are unchanged from the recorded upstream commit; the associated MIT notices and source headers are retained. The original app still identifies itself as TrackWeight. Its code is not presented as Ved's original weighing implementation or as a connected TrackBite sensor.
-
-The next integration could offer a reviewed weight from a compatible measuring device while preserving manual entry. Camera recognition, external nutrition lookup, automatic ingredient identification, and calorie inference from photos are not implemented. A photo and total weight alone do not establish a mixed dish's composition.
-
-The manual nutrition workflow, focused checks, and documentation were newly implemented with AI assistance on 2026-10-08. They are new work following the concept snapshot. See [attribution and license status](ATTRIBUTION.md).
+TrackBite's interface, nutrition workflow, mock adapters and documentation were developed with AI assistance. The weighing foundation is **TrackWeight by Krish Shah**, using **OpenMultitouchSupport by Takuto Nakamura**. Vendored source and both MIT notices are preserved unchanged. See [attribution and license status](ATTRIBUTION.md); the third-party MIT terms do not relicense original TrackBite material.

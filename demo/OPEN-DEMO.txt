@@ -1,0 +1,14 @@
+TRACKBITE — OPEN THE DEMO
+
+1. Open TrackBite-Demo.html in your Mac browser (Finder → Open With → Safari or Chrome).
+2. Select “Empty plate · 100 g” or press 1.
+   Total/gross = 100 g; tare = 100 g; net food = 0 g.
+3. Select “Plate + food · 140 g” or press 2.
+   The large number is 40 g net; gross = 140 g and tare = 100 g.
+4. Click Enter full screen or press F. Use your browser's View menu if necessary. Esc exits browser full screen.
+
+Both states retain the Demo / simulated readings label. No physical load is needed. This UI is not reading a sensor or camera. A phone photo of the UI records a concept demonstration, not calibrated measurement evidence.
+
+Optional: in state 2, preview the mock food match and log the example portion. Nothing is sent online or persisted; switching state clears this demo entry.
+
+Automated browser visual inspection was blocked by the renderer security policy. The calculations and native source build passed, but layout and full-screen behavior need your visual review.
