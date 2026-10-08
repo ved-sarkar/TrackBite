@@ -9,6 +9,6 @@ TRACKBITE — OPEN THE DEMO
 
 Both states retain the Demo / simulated readings label. No physical load is needed. This UI is not reading a sensor or camera. A phone photo of the UI records a concept demonstration, not calibrated measurement evidence.
 
-Optional: in state 2, preview the mock food match and log the example portion. Nothing is sent online or persisted; switching state clears this demo entry.
+Next, preview the food match, confirm it, name the meal and edit its per-100 g nutrition values. Save it to History. Starting a new portion keeps earlier saved entries; closing the page clears this session history.
 
-Automated browser visual inspection was blocked by the renderer security policy. The calculations and native source build passed, but layout and full-screen behavior need your visual review.
+The native SwiftUI screen gallery has been rendered and visually inspected using isolated sample data. Browser-script behavior is checked separately; no browser rendering workaround is used.

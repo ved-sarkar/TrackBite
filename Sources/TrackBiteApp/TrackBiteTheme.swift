@@ -1,9 +1,9 @@
 import SwiftUI
 
 enum TrackBiteTheme {
-    static let navy = Color(red: 24/255, green: 43/255, blue: 64/255)
-    static let ivory = Color(red: 244/255, green: 240/255, blue: 232/255)
-    static let copper = Color(red: 168/255, green: 93/255, blue: 56/255)
-    static let lightCopper = Color(red: 236/255, green: 195/255, blue: 163/255)
-    static let paper = Color(red: 1, green: 253/255, blue: 248/255)
+    static let forest = Color(red: 25/255, green: 61/255, blue: 55/255)
+    static let cream = Color(red: 242/255, green: 243/255, blue: 235/255)
+    static let accent = Color(red: 59/255, green: 105/255, blue: 75/255)
+    static let lime = Color(red: 201/255, green: 233/255, blue: 159/255)
+    static let paper = Color(red: 1, green: 254/255, blue: 248/255)
 }

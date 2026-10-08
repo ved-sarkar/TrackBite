@@ -20,7 +20,7 @@ struct ContentView: View {
             Text("Enter a portion weight and its nutrition source. Live trackpad and camera capture are not connected.")
                 .font(.caption).foregroundStyle(.secondary)
             if let error = model.errorMessage { Text(error).foregroundStyle(.red) }
-            if let message = model.confirmation { Text(message).foregroundStyle(TrackBiteTheme.copper) }
+            if let message = model.confirmation { Text(message).foregroundStyle(TrackBiteTheme.accent) }
             TabView {
                 draft.tabItem { Label("02 / Ingredients", systemImage: "fork.knife") }
                 log.tabItem { Label("03 / Meal log", systemImage: "book.closed") }
@@ -29,9 +29,9 @@ struct ContentView: View {
                 .font(.caption).foregroundStyle(.secondary)
         }
         .padding(28)
-        .background(TrackBiteTheme.ivory)
-        .foregroundStyle(TrackBiteTheme.navy)
-        .tint(TrackBiteTheme.copper)
+        .background(TrackBiteTheme.cream)
+        .foregroundStyle(TrackBiteTheme.forest)
+        .tint(TrackBiteTheme.accent)
         .preferredColorScheme(.light)
         .sheet(item: $editor) { draft in
             IngredientEditor(draft: draft, save: model.setIngredient)
@@ -179,7 +179,7 @@ private struct IngredientEditor: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Identify. Review. Confirm.").font(.system(size: 30, design: .serif))
-            Text("MANUAL INGREDIENT / SOURCE VALUES").font(.caption).tracking(1.5).foregroundStyle(TrackBiteTheme.copper)
+            Text("MANUAL INGREDIENT / SOURCE VALUES").font(.caption).tracking(1.5).foregroundStyle(TrackBiteTheme.accent)
             Form {
                 TextField("Name", text: $draft.name)
                 TextField("Weight in grams", text: $draft.grams)
@@ -202,7 +202,7 @@ private struct IngredientEditor: View {
                 }.keyboardShortcut(.defaultAction)
             }
         }.padding(28).frame(width: 520)
-            .background(TrackBiteTheme.ivory).foregroundStyle(TrackBiteTheme.navy)
-            .tint(TrackBiteTheme.copper).preferredColorScheme(.light)
+            .background(TrackBiteTheme.cream).foregroundStyle(TrackBiteTheme.forest)
+            .tint(TrackBiteTheme.accent).preferredColorScheme(.light)
     }
 }

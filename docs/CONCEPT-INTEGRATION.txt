@@ -2,7 +2,7 @@ TRACKBITE — LIVE INTEGRATION ASSESSMENT
 Reviewed 2026-10-08.
 
 CURRENT DELIVERY
-The HTML demo and native SwiftUI scale show a simulated 100 g empty plate with 100 g tare; the food state shows 140 g gross - 100 g tare = 40 g food. The labels deliberately distinguish total from net. Mock food matching is explicit; its fictional nutrition values are scaled by net grams / 100. Demo logging is session-only. The prior manual meal log remains separate and uses its original implementation. No real images were opened or uploaded.
+The HTML demo and native SwiftUI scale show a simulated 100 g empty plate with 100 g tare; the food state shows 140 g gross - 100 g tare = 40 g food. The labels deliberately distinguish total from net. Mock food matching is explicit; its fictional nutrition values are scaled by net grams / 100. Demo logging is session-only, and saved entries remain in History when starting another portion. The four screens cover weighing, sample identification, editable meal entry and history. The prior manual meal log remains separate and uses its original implementation. No real images were opened or uploaded.
 
 SOURCE AND PROVENANCE
 The prototype extends the existing native manual-entry app. The original nutrition and storage core remains unchanged, while the interface now begins with the scale concept. All vendored source and licenses remain unchanged. ATTRIBUTION.md identifies the recorded TrackWeight revision.

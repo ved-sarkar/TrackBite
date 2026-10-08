@@ -3,20 +3,19 @@
 ## Passed
 
 - Native SwiftUI build on arm64 macOS with Apple Swift 6.3.2.
-- Seven native check groups covering gross/tare/net, rejected invalid readings, explicit candidate confirmation, nutrient scaling, persistence, malformed logs and failed writes.
-- Offline demo script checks covering both weighing states, ingredient review, required naming, confirmed logging, navigation, reset and keyboard shortcuts. Shortcuts do not consume typing inside the ingredient-name field.
-- Vendored TrackWeight source and MIT notices preserved byte-for-byte. The nutrition and storage implementations remain unchanged.
+- Seven nutrition check groups covering gross/tare/net, rejected invalid readings, explicit candidate confirmation, nutrient scaling, persistence, malformed logs and failed writes.
+- Offline demo script checks covering all four screens, required meal/ingredient names, invalid nutrition values, recalculation after edits, duplicate-save prevention, preserved session history, escaped names, keyboard shortcuts and offline restrictions.
+- Five real SwiftUI captures at 1280×800: empty plate, plate + food, sample identification, ingredient/meal entry and history. Every capture was visually inspected for layout and labeling. The capture harness used byte-identical production views and a synthetic in-memory DemoStudioModel, without opening the persistent manual log. The gallery PNGs were not retouched.
+- Both staged demonstration photos are preserved unchanged, including their visible simulated-reading labels. The earlier publication review recorded no sensitive background details and no EXIF/location data or embedded comments.
+- Vendored TrackWeight source, source headers and both MIT notices are unchanged. The nutrition and persistence core remains unchanged.
 
-- Both user-supplied demonstration photos were visually reviewed and published in the README. Their simulated-reading labels remain visible, no sensitive background information was identified, and the JPEGs contain no EXIF, location data or embedded comments. The published images match the originals byte-for-byte; they illustrate the concept demo, not validated hardware measurements.
+## Scope
 
-The browser checks use a small DOM stub to exercise state and event behavior. They do not certify visual layout or accessibility in a real browser. The native package has no external dependencies; no private framework, camera, model or paid service was activated.
+The capture harness uses AppKit/NSHostingView to render the actual native SwiftUI components. It does not open a browser page or bypass the earlier browser local-file URL restriction. Browser-script checks use a DOM stub; browser layout and Fullscreen API behavior remain separate manual checks. Native screenshots confirm rendering, not end-to-end device measurement or camera inference.
 
-## Outstanding
+The 100 g plate / 140 g gross / 40 g net values and sample food nutrients are fixtures. No physical weighing, safe load rating, calibration or food-recognition accuracy is claimed. No private framework, camera, model provider or paid service was activated.
 
-- Automated browser rendering was blocked by the local-file URL security policy; no workaround was attempted. The redesigned interface has not been visually verified in this environment. Native screens compiled but were not launched for a capture. No screenshots are claimed or included.
-- No physical weighing, safe load limit, device-specific calibration or food-recognition accuracy has been validated. The 100/140/40 g demonstration is simulated.
-
-## Reproduce
+## Reproduce checks
 
 ```sh
 swift build
@@ -24,4 +23,4 @@ swift run NutritionChecks
 node scripts/check-demo.cjs
 ```
 
-The offline demo can be opened directly in a browser for manual visual review. Both state buttons, all three navigation screens, confirmation, reset and full-screen controls should be checked. Keep the Demo badge visible in any future captures; staged photographs must be captioned as simulated concept demonstrations.
+In either demo, weigh a portion, review the sample match, confirm it, edit the meal, and save to History. New portions retain earlier entries for the session; closing the demo clears its in-memory history. Native manual meals use the separate persistent log.
