@@ -19,8 +19,9 @@ struct ScaleDemoView: View {
             HStack {
                 Label("TrackBite", systemImage: "scalemass").font(.system(size: 28, weight: .bold))
                 Spacer()
-                Text("DEMO · SIMULATED READINGS").font(.system(size: 11, weight: .medium)).tracking(1)
+                Text("DEMO").font(.system(size: 11, weight: .medium)).tracking(1)
                     .padding(10).overlay(Capsule().stroke(ink.opacity(0.2)))
+                    .accessibilityLabel("Demo: simulated readings")
             }
             VStack(alignment: .leading, spacing: 6) {
                 Text("Every portion has a story.").font(.system(size: 38, weight: .regular, design: .serif))
@@ -29,7 +30,7 @@ struct ScaleDemoView: View {
             HStack(alignment: .top, spacing: 22) {
                 VStack(spacing: 22) {
                     HStack {
-                        Text("FORCE TOUCH · CONCEPT DEMO").font(.system(size: 11)).tracking(1.5)
+                        Text("PORTION WEIGHT").font(.system(size: 11)).tracking(1.5)
                         Spacer()
                         Text(food ? "02 / PLATE + FOOD" : "01 / EMPTY PLATE").font(.system(size: 11)).foregroundStyle(accent)
                     }
@@ -58,24 +59,22 @@ struct ScaleDemoView: View {
                         Text("CAMERA OFF").font(.system(size: 9)).tracking(2)
                     }.frame(maxWidth: .infinity).padding(18).background(paper).clipShape(RoundedRectangle(cornerRadius: 15))
                     Text(food ? "Now, the food." : "First, the plate.").font(.system(size: 24, weight: .semibold))
-                    Text(food ? "140 g total, minus the 100 g plate. Preview an example food match for this 40 g portion." : "The demo remembers a 100 g plate as the tare. Select the food state to reveal the net portion.")
+                    Text(food ? "140 g total, minus the 100 g plate. Preview an example food match for this 40 g portion." : "A 100 g plate is set as the tare. Select the food state to reveal the net portion.")
                         .font(.system(size: 13)).fixedSize(horizontal: false, vertical: true)
                     Button("Preview food identification") { candidate = try? identifier.previewCandidate() }
                         .buttonStyle(.borderedProminent).tint(TrackBiteTheme.copper).disabled(!food)
                     if let candidate {
                         VStack(alignment: .leading, spacing: 6) {
                             Text("\(candidate.name) · 40 g").font(.headline)
-                            Text("Mock match · Sample 50 kcal / 100 g").font(.caption)
+                            Text("Sample 50 kcal / 100 g").font(.caption)
                             Text("Portion estimate: 20 kcal").font(.callout)
                         }
-                        Button("Confirm & log demo portion") {
+                        Button("Confirm & log portion") {
                             demoEntry = try? candidate.ingredient(reading: reading, confirmed: true)
                         }.disabled(demoEntry != nil)
                     }
                     if demoEntry != nil { Text("Logged for this session · 40 g · 20 kcal").font(.caption) }
                     Spacer(minLength: 0)
-                    Text("Mock identification & illustrative nutrition.\nNo camera, sensor, or network access.")
-                        .font(.system(size: 11)).foregroundStyle(ink.opacity(0.65))
                 }.padding(24).frame(width: 290, alignment: .leading).frame(maxHeight: .infinity)
                     .background(TrackBiteTheme.paper).clipShape(RoundedRectangle(cornerRadius: 17))
             }
@@ -91,7 +90,7 @@ struct ScaleDemoView: View {
             HStack {
                 Text("100 g plate + 40 g food = 140 g gross")
                 Spacer()
-                Text("Keys 1 / 2 switch states · Demo entries clear on close")
+                Text("Keys 1 / 2 switch states · Session entries clear on close")
             }.font(.system(size: 11)).foregroundStyle(ink.opacity(0.65))
         }.padding(32).background(paper).foregroundStyle(ink)
             .frame(minWidth: 1000, minHeight: 720).preferredColorScheme(.light)
