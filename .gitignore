@@ -18,3 +18,16 @@ recordings/
 *.heic
 *.mp4
 *.mov
+
+# Reviewed upstream app icons only; keep personal images excluded.
+!third_party/trackweight/TrackWeight/Assets.xcassets/AppIcon.appiconset/*.png
+.build/
+build/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+*.mobileprovision
+*.p12
+.swiftpm/
+meals*.json
+meal-logs/

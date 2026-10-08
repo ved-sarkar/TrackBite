@@ -1,7 +1,9 @@
 # Attribution and license status
 
-TrackBite is Ved Sarkar's proposed nutrition workflow. This concept document was newly prepared with AI assistance on 2026-10-07. It does not represent a historical implementation or a completed product.
+TrackBite is Ved Sarkar's proposed nutrition workflow. The initial concept document was prepared with AI assistance on 2026-10-07. The manual ingredient-entry app, nutrition calculations, local meal log, focused checks, and updated documentation were newly implemented with AI assistance on 2026-10-08. They are not a historical implementation of the camera/trackpad concept, and no third-party weighing authorship is claimed.
 
-Weighing inspiration: TrackWeight by Krish Shah, whose source carries an MIT notice with copyright 2025 Krish Shah. Its trackpad integration uses OpenMultitouchSupport by Kyome22. No source code from either project is copied into this repository, and no upstream ownership is claimed. Consult their repositories for the complete applicable license terms before reusing their code.
+The source reference under [`third_party/trackweight/`](third_party/trackweight/README.md) comes from TrackWeight by Krish Shah at commit `0ce094c51525335cbf6948a2abc0352cfe066d91`. Its [MIT license](third_party/trackweight/LICENSE) retains copyright 2025 Krish Shah. Its trackpad integration uses OpenMultitouchSupport by Takuto Nakamura (Kyome22); the corresponding [MIT notice](third_party/trackweight/LICENSE-OpenMultitouchSupport) and existing source-author headers are preserved.
 
-No open-source license is granted for original TrackBite material by this snapshot.
+All 13 upstream Swift files, including the upstream package manifest, are unchanged. Preparation removed signing-team/identity configuration and omitted local workspace state, export settings, automation, and build outputs. The new root application uses a separate Foundation/SwiftUI implementation and does not import the upstream framework or modify its weighing algorithms.
+
+No open-source license is granted for original TrackBite material by this snapshot. Copied third-party source retains its own MIT terms; those notices do not relicense the original TrackBite application or documents. No external food database or nutrition dataset is included. Test inputs are fictional numbers for checking arithmetic, not food-composition claims.
