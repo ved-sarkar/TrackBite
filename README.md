@@ -12,6 +12,15 @@ TrackBite started with a student-life problem: I cared about nutrition and going
 
 *Concept diagram, not an app screenshot. The current prototype uses simulated weights and a mock food match; live trackpad capture and camera recognition are future integrations.*
 
+## Demo photos
+
+<p>
+  <img src="docs/images/demo-empty-bowl.jpg" alt="Empty orange bowl on a MacBook, with TrackBite showing the simulated 100 g tare state." width="49%">
+  <img src="docs/images/demo-apples.jpg" alt="Two apples in an orange bowl on a MacBook, with TrackBite showing simulated 140 g gross and 40 g net food." width="49%">
+</p>
+
+*The concept demo in two stages: an empty bowl with the simulated 100 g tare state (left), then apples with the simulated 140 g gross / 40 g net state (right).*
+
 ## Try the portion studio
 
 Download or clone the repository, then open **[demo/TrackBite-Demo.html](demo/TrackBite-Demo.html)** in Safari or Chrome. The file is a complete offline interface—no server, installation, account or API key needed. GitHub's file viewer shows its source; open the downloaded file in your browser to use it.
