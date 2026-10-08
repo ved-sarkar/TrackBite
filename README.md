@@ -1,8 +1,12 @@
 # TrackBite
 
+TrackBite explores turning your MacBook into a nutrition companion, combining trackpad weighing with camera-assisted food logging. Its weigh, identify and log workflow brings portion sizes, macros and meal history together in one interface.
+
+## Why I built this
+
 TrackBite started with a student-life problem: I cared about nutrition and going to the gym, but had a limited budget and little equipment. I wondered whether my laptop’s trackpad could work like a weighing scale. That question later grew into the idea of using a camera to log food and track macros.
 
-TrackBite brings weighing, food identification, meal entry and history into one green-and-cream workflow. The current demo uses simulated weights and a sample food match; live trackpad and camera integration are next steps.
+The current demo uses simulated weights and a sample food match; live trackpad and camera integration are next steps.
 
 ## From plate to portion
 
@@ -14,6 +18,15 @@ TrackBite brings weighing, food identification, meal entry and history into one 
 *TrackBite demo: tare the container, then show the net portion. These staged photos show simulated readings.*
 
 ## The full workflow
+
+```mermaid
+flowchart TD
+    Scale["Simulated scale reading"] --> Portion["Net portion after tare"]
+    Portion --> Identify["Sample food match"]
+    Identify --> Review["Confirm ingredient"]
+    Review --> Entry["Edit meal and macros"]
+    Entry --> History["Session history"]
+```
 
 1. **Weigh:** choose the 100 g plate or the 140 g plate + food state, giving 40 g net.
 2. **Identify:** review and confirm the sample food match.
@@ -39,6 +52,26 @@ TrackBite brings weighing, food identification, meal entry and history into one 
 ![Native TrackBite history showing an afternoon snack with a 40 g portion and sample nutrition totals.](docs/images/studio-history.png)
 
 *Actual rendered SwiftUI components, using a synthetic demo session. No personal meal records are shown.*
+
+## Technical architecture
+
+The native app shares a Foundation-based nutrition core across two flows: the four-screen demo keeps its history in memory, while the manual meal log saves through `MealLogStore`.
+
+```mermaid
+flowchart TD
+    Views["SwiftUI views"] --> Studio["DemoStudioModel"]
+    Fixtures["ScaleDemo fixtures + mock identifier"] --> Studio
+    Studio --> Core["NutritionCore: Ingredient + Meal"]
+    Studio --> Memory["Demo history in memory"]
+    Views --> Manual["MealViewModel"]
+    Manual --> Core
+    Manual --> Store["MealLogStore: local JSON"]
+    Planned["Planned trackpad + camera adapters"] -.-> Studio
+```
+
+`DemoStudioModel` manages the selected weighing state, food confirmation and editable meal. `NutritionCore` validates ingredient values and scales per-100 g nutrients to the portion. The separate `MealViewModel` uses the same core and persists manual meals as atomic local JSON.
+
+The dotted connection is planned: the current demo uses `DemoScenario` readings and `MockFoodIdentificationAdapter`; the vendored TrackWeight code is not connected to the root app. The offline HTML demo follows the same interaction with its own session-only history.
 
 ## Try it
 
