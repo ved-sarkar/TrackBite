@@ -12,7 +12,7 @@ The browser checks use a small DOM stub to exercise state and event behavior. Th
 ## Outstanding
 
 - Automated browser rendering was blocked by the local-file URL security policy; no workaround was attempted. The redesigned interface has not been visually verified in this environment. Native screens compiled but were not launched for a capture. No screenshots are claimed or included.
-- The two user-supplied demonstration photos could not be materialized through the supported Library flow, including a bounded retry. Returned descriptions are not pixel inspection. Those photos are excluded until privacy, on-screen text, background details and EXIF can be reviewed and sanitized.
+- Both user-supplied demonstration photos were visually reviewed and published in the README. Their simulated-reading labels remain visible, no sensitive background information was identified, and the JPEGs contain no EXIF, location data or embedded comments. The published images match the originals byte-for-byte; they illustrate the concept demo, not validated hardware measurements.
 - No physical weighing, safe load limit, device-specific calibration or food-recognition accuracy has been validated. The 100/140/40 g demonstration is simulated.
 
 ## Reproduce
