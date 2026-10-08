@@ -4,6 +4,10 @@
 
 TrackBite explores a MacBook Force Touch trackpad as the weighing foundation for a camera-assisted nutrition workflow. The intended experience starts at the scale: subtract the plate, identify the food, confirm its nutrition source, then log the portion.
 
+## Why I built this
+
+TrackBite started with a student-life problem: I cared about nutrition and going to the gym, but had a limited budget and little equipment. I wondered whether my laptop’s trackpad could work like a weighing scale. That question later grew into the idea of using a camera to log food and track macros.
+
 ![TrackBite concept diagram showing 140 g gross minus 100 g tare equals 40 g food, followed by food identification and logging.](docs/images/workflow.svg)
 
 *Concept diagram, not an app screenshot. The current prototype uses simulated weights and a mock food match; live trackpad capture and camera recognition are future integrations.*
